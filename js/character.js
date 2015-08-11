@@ -35,6 +35,11 @@ var Character = function () {
         return 2 + this.combatVal / 2;
     };
 
+    this.getWoundPenalties = function ()
+    {
+        return -this.wound;
+    };
+
     this.roll = function (side) {
         var dice = 0;
         do {
@@ -54,7 +59,7 @@ var Character = function () {
             return 0;
         }
 
-        return this.jokerRoll(this.combatVal) + this.wound;
+        return this.jokerRoll(this.combatVal) + this.getWoundPenalties();
     };
 
     this.getDamageRoll = function (raise) {
@@ -87,10 +92,10 @@ var Character = function () {
             wounds = Math.floor(delta / 4);
             if (wounds > 0) {
                 this.shaken = true;
-                this.wound -= wounds;
+                this.wound += wounds;
             } else {
                 if (this.shaken) {
-                    this.wound--;
+                    this.wound++;
                 } else {
                     this.shaken = true;
                 }
@@ -99,14 +104,13 @@ var Character = function () {
     };
 
     this.runTurn = function () {
+        // spirit roll
+        // ...
+
         // unshaken
-        if (this.shaken) {
-            if (this.benny > 0) {
-                this.shaken = false;
-                this.benny--;
-            } else {
-                // spirit roll
-            }
+        if (this.shaken && (this.benny > 0)) {
+            this.shaken = false;
+            this.benny--;
         }
 
         var attackValue = this.getCombatRoll();
