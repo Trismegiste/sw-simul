@@ -26,5 +26,21 @@ var Combat = {
         }
 
         return result;
+    },
+    runSimul: function (att, def, counter) {
+        var stat = [0, 0, 0, 0];
+        for (var k = 0; k < counter; k++) {
+            var res = Combat.getResult(att, def);
+            stat[res]++;
+            res = Combat.getResult(def, att);
+            if (res === Combat.ATTACKER) {
+                res = Combat.DEFENDER;
+            } else if (res === Combat.DEFENDER) {
+                res = Combat.ATTACKER;
+            }
+            stat[res]++;
+        }
+
+        return stat;
     }
 };

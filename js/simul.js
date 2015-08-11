@@ -1,20 +1,8 @@
 var pj = new Character();
-pj.combatVal=6;
+pj.combatVal=4;
 var pnj = new Character();
 
-var stat = [0, 0, 0, 0];
-for (var k = 0; k < 10000; k++) {
-    var res = Combat.getResult(pj, pnj);
-    stat[res]++;
-    res = Combat.getResult(pnj, pj);
-    if (res === Combat.ATTACKER) {
-        res = Combat.DEFENDER;
-    } else if (res === Combat.DEFENDER) {
-        res = Combat.ATTACKER;
-    }
-    stat[res]++;
-}
-
+var stat = Combat.runSimul(pj, pnj, 10000);
 
 console.log(stat)
 

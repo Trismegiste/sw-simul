@@ -7,18 +7,20 @@ var Character = function () {
     this.combatVal = 4;
     this.vigor = 4;
     this.armour = 0;
-    this.wound = 0;
-    this.shaken = false;
-    this.benny = 3;
     this.damageSide = 6;
     this.damageNumber = 2;
     this.damageOffset = 0;
+
+    this.wound = 0;
+    this.shaken = false;
+    this.benny = 3;
     this.target = undefined;
 
     this.reset = function () {
         this.wound = 0;
         this.shaken = false;
         this.target = undefined;
+        this.benny = 3;
     };
 
     this.addTarget = function (target) {
