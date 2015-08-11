@@ -1,4 +1,5 @@
 var pj = new Character();
+pj.combatVal=6;
 var pnj = new Character();
 
 var stat = [0, 0, 0, 0];
@@ -6,10 +7,10 @@ for (var k = 0; k < 10000; k++) {
     var res = Combat.getResult(pj, pnj);
     stat[res]++;
     res = Combat.getResult(pnj, pj);
-    if (res === 2) {
-        res = 1
-    } else if (res === 1) {
-        res = 2
+    if (res === Combat.ATTACKER) {
+        res = Combat.DEFENDER;
+    } else if (res === Combat.DEFENDER) {
+        res = Combat.ATTACKER;
     }
     stat[res]++;
 }

@@ -97,7 +97,15 @@ var Character = function () {
     };
 
     this.runTurn = function () {
-        this.shaken = false;
+        // unshaken
+        if (this.shaken) {
+            if (this.benny > 0) {
+                this.shaken = false;
+                this.benny--;
+            } else {
+                // spirit roll
+            }
+        }
 
         var attackValue = this.getCombatRoll();
         var hitted = this.target.isHitted(attackValue);
