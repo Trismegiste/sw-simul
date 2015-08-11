@@ -13,10 +13,16 @@ var Character = function () {
     this.damageSide = 6;
     this.damageNumber = 2;
     this.damageOffset = 0;
+    this.target = undefined;
 
     this.reset = function () {
         this.wound = 0;
         this.shaken = false;
+        this.target = undefined;
+    };
+
+    this.addTarget = function (target) {
+        this.target = target;
     };
 
     this.getToughness = function () {
@@ -24,7 +30,7 @@ var Character = function () {
     };
 
     this.getParry = function () {
-        return 2 + this.combat / 2;
+        return 2 + this.combatVal / 2;
     };
 
     this.roll = function (side) {
@@ -38,7 +44,7 @@ var Character = function () {
     };
 
     this.jokerRoll = function (side) {
-        return Math.max([this.roll(side), this.roll(6)]);
+        return Math.max(this.roll(side), this.roll(6));
     };
 
     this.getCombatRoll = function () {
@@ -46,7 +52,7 @@ var Character = function () {
             return 0;
         }
 
-        return this.jokerRoll(this.combat) + this.wound;
+        return this.jokerRoll(this.combatVal) + this.wound;
     };
 
     this.getDamageRoll = function (raise) {
@@ -62,7 +68,7 @@ var Character = function () {
         return dam;
     };
 
-    this.getHitted = function (attVal) {
+    this.isHitted = function (attVal) {
         if (attVal >= (this.getParry() + 4)) {
             return this.HITTED_RAISE;
         } else if (attVal >= this.getParry()) {
@@ -89,14 +95,68 @@ var Character = function () {
             }
         }
     };
+
+    this.runTurn = function () {
+        this.shaken = false;
+
+        var attackValue = this.getCombatRoll();
+        var hitted = this.target.isHitted(attackValue);
+
+        var damage = 0;
+        switch (hitted) {
+            case this.HITTED :
+                damage = this.getDamageRoll();
+                break;
+            case this.HITTED_RAISE :
+                damage = this.getDamageRoll(true);
+                break;
+        }
+
+        this.target.inflictDamage(damage);
+    };
 };
 
-var pj = new Character();
+var Combat = {
+    DRAW: 3,
+    ATTACKER: 1,
+    DEFENDER: 2,
+    getResult: function (att, def) {
+        att.reset();
+        def.reset();
+        att.addTarget(def);
+        def.addTarget(att);
+        var counter = 0;
 
-var sum = 0;
-for (var k = 0; k < 10000; k++) {
-    sum += pj.getDamageRoll(false);
+        do {
+            // attacker attacks defender
+            att.runTurn();
+            // defender attacks attacker
+            def.runTurn();
+            counter++;
+        } while ((att.wound > -3) && (def.wound > -3));
+
+        var result = 0;
+        if (att.wound <= -3) {
+            result = this.DEFENDER;
+        }
+        if (def.wound <= -3) {
+            result |= this.ATTACKER;
+        }
+
+        return result;
+    }
 }
-console.log(sum / 10000)
+
+var pj = new Character();
+var pnj = new Character();
+
+var stat = [];
+//for (var k = 0; k < 10; k++) {
+//    var res = Combat.getResult(pj, pnj);
+//    stat[res]++;
+//}
+
+
+console.log(stat)
 
 
