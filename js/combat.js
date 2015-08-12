@@ -15,13 +15,13 @@ var Combat = {
             // defender attacks attacker
             def.runTurn();
             counter++;
-        } while ((att.wound < 4) && (def.wound < 4));
+        } while (!att.incapacited && !def.incapacited);
 
         var result = 0;
-        if (att.wound > 3) {
+        if (att.incapacited) {
             result = this.DEFENDER;
         }
-        if (def.wound > 3) {
+        if (def.incapacited) {
             result |= this.ATTACKER;
         }
 

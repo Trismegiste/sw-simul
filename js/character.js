@@ -101,6 +101,10 @@ var Character = function () {
                 }
             }
         }
+
+        if (this.wound > 3) {
+            this.incapacited = true;
+        }
     };
 
     this.attemptUnshaken = function () {
