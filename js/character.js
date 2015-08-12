@@ -4,8 +4,8 @@ var Character = function () {
     this.HITTED = 1;
     this.HITTED_RAISE = 2;
 
-    this.combatVal = 4;
-    this.shootingVal = 4;
+    this.fighting = 4;
+    this.shooting = 4;
     this.vigor = 4;
     this.spirit = 4;
     this.strength = 4;
@@ -34,7 +34,7 @@ var Character = function () {
     };
 
     this.getParry = function () {
-        return 2 + this.combatVal / 2;
+        return 2 + this.fighting / 2;
     };
 
     this.getWoundPenalties = function ()
@@ -63,11 +63,11 @@ var Character = function () {
     };
 
     this.getCombatRoll = function () {
-        return this.jokerRoll(this.combatVal);
+        return this.jokerRoll(this.fighting);
     };
 
     this.getShootingRoll = function () {
-        return this.jokerRoll(this.shootingVal);
+        return this.jokerRoll(this.shooting);
     };
 
     this.getMeleeDamage = function (raise) {
