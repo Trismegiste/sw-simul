@@ -23,10 +23,11 @@ $('#pulsa-start').click(function (event) {
 
     model.forEach(function (pnj, k) {
         if (k > 0) {
-            var result = Combat.runSimul(model[0], pnj, 10000);
-            $('div[data-model-pk=' + k + '] .result .victory').text(result[1]);
-            $('div[data-model-pk=' + k + '] .result .defeat').text(result[2]);
-            $('div[data-model-pk=' + k + '] .result .draw').text(result[3]);
+            var repeat = 10000;
+            var result = Combat.runSimul(model[0], pnj, repeat);
+            $('div[data-model-pk=' + k + '] .result .victory').text(Math.round(result[1] / (2 * repeat) * 100));
+            $('div[data-model-pk=' + k + '] .result .defeat').text(Math.round(result[2] / (2 * repeat) * 100));
+            $('div[data-model-pk=' + k + '] .result .draw').text(Math.round(result[3] / (2 * repeat) * 100));
         }
     });
 
