@@ -6,13 +6,10 @@ var model = [
 ];
 
 model.forEach(function (charact, k) {
-    $('div[data-model-pk=' + k + '] input[name=strength]').val(charact.strength);
-    $('div[data-model-pk=' + k + '] input[name=vigor]').val(charact.vigor);
-    $('div[data-model-pk=' + k + '] input[name=armour]').val(charact.armour);
-    $('div[data-model-pk=' + k + '] input[name=fighting]').val(charact.fighting);
-    $('div[data-model-pk=' + k + '] input[name=shooting]').val(charact.shooting);
-    $('div[data-model-pk=' + k + '] input[name=hardtokill]').val(charact.hardToKill);
-    $('div[data-model-pk=' + k + '] input[name=dodge]').val(charact.dodge);
+    $('div[data-model-pk=' + k + '] input[type=number]').each(function (k, item) {
+        var obj = $(item);
+        obj.val(charact[obj.attr('name')]);
+    });
 });
 
 $('#pulsa-start').click(function (event) {
@@ -22,13 +19,10 @@ $('#pulsa-start').click(function (event) {
     var mode = $('select').val();
 
     model.forEach(function (charact, k) {
-        charact.strength = parseInt($('div[data-model-pk=' + k + '] input[name=strength]').val());
-        charact.vigor = parseInt($('div[data-model-pk=' + k + '] input[name=vigor]').val());
-        charact.armour = parseInt($('div[data-model-pk=' + k + '] input[name=armour]').val());
-        charact.fighting = parseInt($('div[data-model-pk=' + k + '] input[name=fighting]').val());
-        charact.shooting = parseInt($('div[data-model-pk=' + k + '] input[name=shooting]').val());
-        charact.hardToKill = parseInt($('div[data-model-pk=' + k + '] input[name=hardtokill]').val());
-        charact.dodge = parseInt($('div[data-model-pk=' + k + '] input[name=dodge]').val());
+        $('div[data-model-pk=' + k + '] input[type=number]').each(function (k, item) {
+            var obj = $(item);
+            charact[obj.attr('name')] = parseInt(obj.val());
+        });
     });
 
     model.forEach(function (pnj, k) {
