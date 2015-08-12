@@ -6,22 +6,20 @@ var Character = function () {
 
     this.combatVal = 4;
     this.vigor = 4;
+    this.spirit = 6;
     this.armour = 0;
     this.damageSide = 6;
     this.damageNumber = 2;
     this.damageOffset = 0;
-
-    this.wound = 0;
-    this.shaken = false;
-    this.benny = 3;
-    this.target = undefined;
 
     this.reset = function () {
         this.wound = 0;
         this.shaken = false;
         this.target = undefined;
         this.benny = 3;
+        this.incapacited = false;
     };
+    this.reset();
 
     this.addTarget = function (target) {
         this.target = target;
@@ -50,16 +48,18 @@ var Character = function () {
         return dice;
     };
 
-    this.jokerRoll = function (side) {
-        return Math.max(this.roll(side), this.roll(6));
+    this.jokerRoll = function (side, ignoreMalus) {
+        var roll = Math.max(this.roll(side), this.roll(6));
+
+        if (ignoreMalus !== true) {
+            roll += this.getWoundPenalties();
+        }
+
+        return roll;
     };
 
     this.getCombatRoll = function () {
-        if (this.shaken) {
-            return 0;
-        }
-
-        return this.jokerRoll(this.combatVal) + this.getWoundPenalties();
+        return this.jokerRoll(this.combatVal);
     };
 
     this.getDamageRoll = function (raise) {
@@ -85,7 +85,7 @@ var Character = function () {
         return this.MISSED;
     };
 
-    this.inflictDamage = function (dam) {
+    this.receiveDamage = function (dam) {
         delta = dam - this.getToughness();
 
         if (delta >= 0) {
@@ -103,14 +103,24 @@ var Character = function () {
         }
     };
 
-    this.runTurn = function () {
+    this.attemptUnshaken = function () {
         // spirit roll
-        // ...
+        if (this.jokerRoll(this.spirit) >= 8) {
+            this.shaken = false;
+        }
+    }
+
+    this.runTurn = function () {
+        this.attemptUnshaken();
 
         // unshaken
         if (this.shaken && (this.benny > 0)) {
             this.shaken = false;
             this.benny--;
+        }
+
+        if (this.shaken || this.incapacited) {
+            return;
         }
 
         var attackValue = this.getCombatRoll();
@@ -126,6 +136,6 @@ var Character = function () {
                 break;
         }
 
-        this.target.inflictDamage(damage);
+        this.target.receiveDamage(damage);
     };
 };
