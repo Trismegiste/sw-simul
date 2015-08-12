@@ -5,12 +5,15 @@ var Character = function () {
     this.HITTED_RAISE = 2;
 
     this.combatVal = 4;
+    this.shootingVal = 4;
     this.vigor = 4;
-    this.spirit = 6;
-    this.strength = 6;
+    this.spirit = 4;
+    this.strength = 4;
     this.armour = 0;
     this.meleeWeapon = 6;
     this.hardToKill = 0;
+    this.rangeWeaponDice = 6;
+    this.rangeWeaponNumber = 2;
 
     this.reset = function () {
         this.wound = 0;
@@ -62,7 +65,11 @@ var Character = function () {
         return this.jokerRoll(this.combatVal);
     };
 
-    this.getMeleeDamageRoll = function (raise) {
+    this.getShootingRoll = function () {
+        return this.jokerRoll(this.shootingVal);
+    };
+
+    this.getMeleeDamage = function (raise) {
         var dam = this.roll(this.strength);
         dam += this.roll(Math.max(this.strength, this.meleeWeapon));
 
@@ -73,10 +80,37 @@ var Character = function () {
         return dam;
     };
 
-    this.isHitted = function (attVal) {
+    this.getRangeDamage = function (raise) {
+        var dam = 0;
+        for (var k = 0; k < this.rangeWeaponNumber; k++) {
+            dam += this.roll(this.rangeWeaponDice);
+        }
+
+        if (raise === true) {
+            dam += this.roll(6);
+        }
+
+        return dam;
+    };
+
+    this.isMeleeHitted = function (attVal) {
         if (attVal >= (this.getParry() + 4)) {
             return this.HITTED_RAISE;
         } else if (attVal >= this.getParry()) {
+            return this.HITTED;
+        }
+
+        return this.MISSED;
+    };
+
+    this.getDodge = function () {
+        return 4;
+    }
+
+    this.isRangeHitted = function (attVal) {
+        if (attVal >= (this.getDodge() + 4)) {
+            return this.HITTED_RAISE;
+        } else if (attVal >= this.getDodge()) {
             return this.HITTED;
         }
 
@@ -112,7 +146,7 @@ var Character = function () {
         }
     };
 
-    this.runTurn = function () {
+    this.runTurn = function (mode) {
         this.attemptUnshaken();
 
         // unshaken
@@ -125,18 +159,32 @@ var Character = function () {
             return;
         }
 
-        var attackValue = this.getCombatRoll();
-        var hitted = this.target.isHitted(attackValue);
+        var attackValue, hitted, damage;
 
-        var damage = 0;
-        switch (hitted) {
-            case this.HITTED :
-                damage = this.getMeleeDamageRoll();
-                break;
-            case this.HITTED_RAISE :
-                damage = this.getMeleeDamageRoll(true);
-                break;
+        if (mode === 'melee') {
+            attackValue = this.getCombatRoll();
+            hitted = this.target.isMeleeHitted(attackValue);
+            switch (hitted) {
+                case this.HITTED :
+                    damage = this.getMeleeDamage();
+                    break;
+                case this.HITTED_RAISE :
+                    damage = this.getMeleeDamage(true);
+                    break;
+            }
+        } else if (mode === 'range') {
+            attackValue = this.getShootingRoll();
+            hitted = this.target.isRangeHitted(attackValue);
+            switch (hitted) {
+                case this.HITTED :
+                    damage = this.getRangeDamage();
+                    break;
+                case this.HITTED_RAISE :
+                    damage = this.getRangeDamage(true);
+                    break;
+            }
         }
+
 
         this.target.receiveDamage(damage);
     };

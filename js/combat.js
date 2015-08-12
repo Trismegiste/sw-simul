@@ -2,7 +2,7 @@ var Combat = {
     DRAW: 3,
     ATTACKER: 1,
     DEFENDER: 2,
-    getResult: function (att, def) {
+    getResult: function (att, def, mode) {
         att.reset();
         def.reset();
         att.addTarget(def);
@@ -11,9 +11,9 @@ var Combat = {
 
         do {
             // attacker attacks defender
-            att.runTurn();
+            att.runTurn(mode);
             // defender attacks attacker
-            def.runTurn();
+            def.runTurn(mode);
             counter++;
         } while (!att.incapacited && !def.incapacited);
 
@@ -27,12 +27,12 @@ var Combat = {
 
         return result;
     },
-    runSimul: function (att, def, counter) {
+    runSimul: function (att, def, counter, mode) {
         var stat = [0, 0, 0, 0];
         for (var k = 0; k < counter; k++) {
-            var res = Combat.getResult(att, def);
+            var res = Combat.getResult(att, def, mode);
             stat[res]++;
-            res = Combat.getResult(def, att);
+            res = Combat.getResult(def, att, mode);
             if (res === Combat.ATTACKER) {
                 res = Combat.DEFENDER;
             } else if (res === Combat.DEFENDER) {
