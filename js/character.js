@@ -12,6 +12,7 @@ var Character = function () {
     this.armour = 0;
     this.meleeWeapon = 6;
     this.hardToKill = 0;
+    this.dodge = 0;
     this.rangeWeaponDice = 6;
     this.rangeWeaponNumber = 2;
 
@@ -104,8 +105,8 @@ var Character = function () {
     };
 
     this.getDodge = function () {
-        return 4;
-    }
+        return 4 + this.dodge;
+    };
 
     this.isRangeHitted = function (attVal) {
         if (attVal >= (this.getDodge() + 4)) {

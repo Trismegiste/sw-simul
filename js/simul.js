@@ -12,6 +12,7 @@ model.forEach(function (charact, k) {
     $('div[data-model-pk=' + k + '] input[name=combat]').val(charact.combatVal);
     $('div[data-model-pk=' + k + '] input[name=shooting]').val(charact.shootingVal);
     $('div[data-model-pk=' + k + '] input[name=hardtokill]').val(charact.hardToKill);
+    $('div[data-model-pk=' + k + '] input[name=dodge]').val(charact.dodge);
 });
 
 $('#pulsa-start').click(function (event) {
@@ -27,6 +28,7 @@ $('#pulsa-start').click(function (event) {
         charact.combatVal = parseInt($('div[data-model-pk=' + k + '] input[name=combat]').val());
         charact.shootingVal = parseInt($('div[data-model-pk=' + k + '] input[name=shooting]').val());
         charact.hardToKill = parseInt($('div[data-model-pk=' + k + '] input[name=hardtokill]').val());
+        charact.dodge = parseInt($('div[data-model-pk=' + k + '] input[name=dodge]').val());
     });
 
     model.forEach(function (pnj, k) {
