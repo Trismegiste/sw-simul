@@ -11,6 +11,7 @@ var Character = function () {
     this.damageSide = 6;
     this.damageNumber = 2;
     this.damageOffset = 0;
+    this.hardToKill = 0;
 
     this.reset = function () {
         this.wound = 0;
@@ -35,7 +36,7 @@ var Character = function () {
 
     this.getWoundPenalties = function ()
     {
-        return -this.wound;
+        return Math.max(-this.wound + this.hardToKill, 0);
     };
 
     this.roll = function (side) {
@@ -112,7 +113,7 @@ var Character = function () {
         if (this.jokerRoll(this.spirit) >= 8) {
             this.shaken = false;
         }
-    }
+    };
 
     this.runTurn = function () {
         this.attemptUnshaken();
