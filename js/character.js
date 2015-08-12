@@ -7,10 +7,9 @@ var Character = function () {
     this.combatVal = 4;
     this.vigor = 4;
     this.spirit = 6;
+    this.strength = 6;
     this.armour = 0;
-    this.damageSide = 6;
-    this.damageNumber = 2;
-    this.damageOffset = 0;
+    this.meleeWeapon = 6;
     this.hardToKill = 0;
 
     this.reset = function () {
@@ -63,11 +62,9 @@ var Character = function () {
         return this.jokerRoll(this.combatVal);
     };
 
-    this.getDamageRoll = function (raise) {
-        var dam = this.damageOffset;
-        for (var k = 0; k < this.damageNumber; k++) {
-            dam += this.roll(this.damageSide);
-        }
+    this.getMeleeDamageRoll = function (raise) {
+        var dam = this.roll(this.strength);
+        dam += this.roll(Math.max(this.strength, this.meleeWeapon));
 
         if (raise === true) {
             dam += this.roll(6);
@@ -134,10 +131,10 @@ var Character = function () {
         var damage = 0;
         switch (hitted) {
             case this.HITTED :
-                damage = this.getDamageRoll();
+                damage = this.getMeleeDamageRoll();
                 break;
             case this.HITTED_RAISE :
-                damage = this.getDamageRoll(true);
+                damage = this.getMeleeDamageRoll(true);
                 break;
         }
 

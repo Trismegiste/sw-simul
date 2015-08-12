@@ -6,6 +6,7 @@ var model = [
 ];
 
 model.forEach(function (charact, k) {
+    $('div[data-model-pk=' + k + '] input[name=strength]').val(charact.strength);
     $('div[data-model-pk=' + k + '] input[name=vigor]').val(charact.vigor);
     $('div[data-model-pk=' + k + '] input[name=armour]').val(charact.armour);
     $('div[data-model-pk=' + k + '] input[name=combat]').val(charact.combatVal);
@@ -17,6 +18,7 @@ $('#pulsa-start').click(function (event) {
     event.preventDefault();
 
     model.forEach(function (charact, k) {
+        charact.strength = parseInt($('div[data-model-pk=' + k + '] input[name=strength]').val());
         charact.vigor = parseInt($('div[data-model-pk=' + k + '] input[name=vigor]').val());
         charact.armour = parseInt($('div[data-model-pk=' + k + '] input[name=armour]').val());
         charact.combatVal = parseInt($('div[data-model-pk=' + k + '] input[name=combat]').val());
